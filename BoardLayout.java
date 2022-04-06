@@ -5,17 +5,15 @@ import java.awt.geom.AffineTransform;
 public class BoardLayout extends JPanel {
 
 
-    public static final int x = 250;
-    public static final int y = 100;
-    public static final int width = 400;
-    public static final int height = 600;
-    public static final boolean raised = true;
+    private static final int x = 250;
+    private static final int y = 100;
+    private static final int width = 400;
+    private static final int height = 600;
+    private static final boolean raised = true;
 
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
-
-
 
                 g2.setColor(Color.GRAY);
                 g2.fill3DRect(x, y, width, height, raised);
@@ -33,15 +31,15 @@ public class BoardLayout extends JPanel {
                 g2.drawString("PLAYER A", x+50,-(y*7)+ 25);
 
 
-                pitsLabel(g2,"A"); // player A pits label
+                pitsLabelA(g2); // player A pits label
                 g2.setColor(Color.RED);
                 g2.drawString("PLAYER B", x+50,-(y*2));
-                pitsLabel(g2); // player B pits label
+                pitsLabelB(g2); // player B pits label
 
 
             }
 
-            private void pitsLabel(Graphics2D g2) {
+            private void pitsLabelB(Graphics2D g2) {
 
                 g2.setColor(Color.BLACK);
                 for (int i=5,j=1; i >= 1; i--,j +=100) {
@@ -51,11 +49,11 @@ public class BoardLayout extends JPanel {
                 }
             }
 
-            private void pitsLabel(Graphics2D g2, String team) {
+            private void pitsLabelA(Graphics2D g2) {
                 g2.setColor(Color.BLACK);
                 for (int i=1,j = 1; i<6;i++,j +=100) {
 
-                    g2.drawString(team + i,(x*2)+75-j,-(y*6));
+                    g2.drawString("A" + i,(x*2)+75-j,-(y*6));
 
                 }
 
@@ -63,7 +61,7 @@ public class BoardLayout extends JPanel {
             }
 
 
-}
+    }
 
 
 
