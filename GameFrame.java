@@ -1,28 +1,23 @@
-package mancala;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 public class GameFrame extends JFrame
 {
 	
-	public GameFrame(JPanel buttons, JPanel gameSpace, String message) 
+	private Layout layout;
+	
+	public GameFrame(JPanel buttons, Layout gameSpace, String message) 
 	{
 		super();
 		updateFrame(buttons, gameSpace, message);
-		this.setMinimumSize(new Dimension(600,600));
+		this.setMinimumSize(new Dimension(1500,1000));
 	}
 	
-	public void updateFrame(JPanel buttons, JPanel gameSpace, String message) 
+	public void updateFrame(JPanel buttons, Layout gameSpace, String message) 
 	{
 		getContentPane().removeAll();
 		JLabel label = new JLabel(message);
@@ -31,7 +26,7 @@ public class GameFrame extends JFrame
 		add(buttons, BorderLayout.PAGE_END);
 	}
 	
-	public void screen2() 
+	public void screen2(boolean choice) 
 	{
 		JButton button1 = new JButton("3");
 		JButton button2 = new JButton("4");
@@ -39,26 +34,31 @@ public class GameFrame extends JFrame
 		String label = "How many stones per pit?";
 		panel.add(button1);
 		panel.add(button2);
-		button1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) 
-			{
-				screen3();
-			}
-		});
-		updateFrame(panel, new JPanel(), label);
+		BoardModel model = new BoardModel();
+		button1.addActionListener(getActionListener2(3));
+		button2.addActionListener(getActionListener2(4));
+		if (choice) layout = new BoardLayout(model.getModel());
+		else layout = new BoardLayout2();
+		updateFrame(panel, layout , label);
 		revalidate();
 		repaint();
 	}
 	
-	public void screen3() 
+	public void screen3(int x) 
 	{
 		JButton button1 = new JButton("Undo");
 		JButton button2 = new JButton("End Turn");
 		JPanel panel = new JPanel();
 		String label = "Player X turn";
+		//JLabel label = new JLabel("Player X turn");
 		panel.add(button1);
 		panel.add(button2);
-		updateFrame(panel, new JPanel(), label);
+		updateFrame(panel, layout, label);
+//		BorderLayout layout = (BorderLayout)getLayout();
+//		remove(layout.getLayoutComponent(BorderLayout.PAGE_END));
+//		remove(layout.getLayoutComponent(BorderLayout.PAGE_START));
+//		add(label, BorderLayout.PAGE_START);
+//		add(panel, BorderLayout.PAGE_END);
 		revalidate();
 		repaint();
 	}
@@ -71,14 +71,34 @@ public class GameFrame extends JFrame
 		String label = "Please choose a display style for your game.";
 		panel.add(button1);
 		panel.add(button2);
-		GameFrame frame = new GameFrame(panel, new JPanel(), label);
-		button1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) 
-			{
-				frame.screen2();
-			}
-		});
+		GameFrame frame = new GameFrame(panel, new Layout(), label);
+		button1.addActionListener(frame.getActionListener(true));
+		button2.addActionListener(frame.getActionListener(false));
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	public ActionListener getActionListener(boolean choice) 
+	{
+		return new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				screen2(choice);
+			}
+		};
+	}
+	
+	public ActionListener getActionListener2(int x) 
+	{
+		return new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				screen3(x);
+			}
+		};
 	}
 }

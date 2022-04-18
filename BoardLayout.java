@@ -1,16 +1,33 @@
 import javax.swing.*;
+import javax.swing.event.*;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class BoardLayout extends JPanel {
+public class BoardLayout extends Layout implements ChangeListener{
 
-
+	private static final int NUMBER_OF_PITS = 14;
     private static final int x = 250;
     private static final int y = 100;
     private static final int width = 400;
     private static final int height = 600;
     private static final boolean raised = true;
-
+    
+    private int[] model;
+    private MancalaPit[] pits;
+    		
+    		public BoardLayout(int[] model) 
+    		{
+    			this.model = model;
+    			pits = new MancalaPit[NUMBER_OF_PITS];
+    			int i = 0;
+    			while (i < NUMBER_OF_PITS) 
+    			{
+    				pits[i] = new MancalaPit();
+    				i++;
+    			}
+    		}
+    
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
@@ -38,6 +55,11 @@ public class BoardLayout extends JPanel {
 
 
             }
+            
+            public void setModel(int[] model) 
+            {
+            	this.model = model;
+            }
 
             private void pitsLabelB(Graphics2D g2) {
 
@@ -59,6 +81,12 @@ public class BoardLayout extends JPanel {
 
 
             }
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
 
 
     }

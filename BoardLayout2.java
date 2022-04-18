@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class BoardLayout2 extends JPanel {
+public class BoardLayout2 extends Layout {
 
         private static final int x = 150;
         private static final int y = 200;

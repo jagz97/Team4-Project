@@ -24,6 +24,11 @@ public class BoardModel
     {
         CONTINUE, AFINISHED, BFINISHED ;
     }
+    
+    public int[] getModel()
+    {
+    	return currBoard;
+    }
 
 
     public BoardModel(int marblePerPit)
