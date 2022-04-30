@@ -13,8 +13,7 @@ public class BoardModel
     private static final int A_MANCALA = 6;
     private static final int B_MANCALA = 13;
 
-    private int[] currBoard;
-    private int[] prevBoard;
+    private MancalaPit[] currBoard;
     private ArrayList<ChangeListener> listeners;
     private boolean lastMarbleInMancala;
     private int undos;
@@ -25,7 +24,7 @@ public class BoardModel
         CONTINUE, AFINISHED, BFINISHED ;
     }
     
-    public int[] getModel()
+    public MancalaPit[] getModel()
     {
     	return currBoard;
     }
@@ -33,10 +32,14 @@ public class BoardModel
 
     public BoardModel(int marblePerPit)
     {
-        currBoard = new int[] { marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, 0,
-                marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, 0 };
-
-        prevBoard = currBoard.clone();
+        currBoard = new MancalaPit[NUMBER_OF_PITS];
+        int i = 0;
+        while (i < NUMBER_OF_PITS) 
+        {
+        	currBoard[i] = new MancalaPit(marblePerPit);
+        }
+        currBoard[A_MANCALA].clear();
+        currBoard[B_MANCALA].clear();
         lastMarbleInMancala = false;
         listeners = new ArrayList<>();
         undos = 0;
@@ -46,8 +49,7 @@ public class BoardModel
     public BoardModel()
     {
 
-        currBoard = new int[NUMBER_OF_PITS];
-        prevBoard = currBoard.clone(); // or null?
+        currBoard = new MancalaPit[NUMBER_OF_PITS];
         lastMarbleInMancala = false;
         listeners = new ArrayList<>();
         undos = 0;
@@ -61,31 +63,22 @@ public class BoardModel
         for (int i = 0; i < currBoard.length; i++)
         {
             if (i == A_MANCALA || i == B_MANCALA)
-                currBoard[i] = 0;
+                currBoard[i].clear();
             else
-                currBoard[i] = MarblePerPit;
+                currBoard[i].set(MarblePerPit);
 
         }
-
-        prevBoard = currBoard.clone();
     }
 
 
-    public int[] getCurrBoard()
+    public MancalaPit[] getCurrBoard()
     {
         return currBoard.clone();
     }
 
-
-    public int[] getPrevBoard()
-    {
-        return prevBoard.clone();
-    }
-
-
     public int getAmountInPit(int position)
     {
-        return currBoard[position];
+        return currBoard[position].get();
     }
 
 
@@ -102,7 +95,7 @@ public class BoardModel
 
         //Check if all A's pits are empty
         for (int pitA = 0; pitA < A_MANCALA; pitA++){
-            if (currBoard[pitA] != 0){
+            if (currBoard[pitA].get() != 0){
                 A_empty = false;
                 break;
             } else A_empty = true;
@@ -110,7 +103,7 @@ public class BoardModel
 
         //Check if all B's pits are empty
         for (int pitB = 7; pitB < B_MANCALA; pitB++){
-            if (currBoard[pitB] != 0){
+            if (currBoard[pitB].get() != 0){
                 B_empty = false;
                 break;
 
@@ -137,9 +130,9 @@ public class BoardModel
 
 
         //Compare number of stones in two mancalas
-        if (currBoard[A_MANCALA] > currBoard[B_MANCALA])
+        if (currBoard[A_MANCALA].get() > currBoard[B_MANCALA].get())
             return 1;
-        else if (currBoard[A_MANCALA] < currBoard[B_MANCALA])
+        else if (currBoard[A_MANCALA].get() < currBoard[B_MANCALA].get())
             return 2;
         else return 3;
     }
@@ -150,8 +143,8 @@ public class BoardModel
 
         for (int i = pitPos; i < mancalaPos; i++)
         {
-            currBoard[mancalaPos] += currBoard[i];
-            currBoard[i] = 0;
+            currBoard[mancalaPos].add(currBoard[i].get());
+            currBoard[i].clear();
         }
         for (ChangeListener l : listeners)
             l.stateChanged(new ChangeEvent(this));
@@ -249,7 +242,10 @@ public class BoardModel
 
     public void undo() {
 
-        currBoard = prevBoard.clone();
+        for (MancalaPit pit : currBoard)
+        	pit.revert();
+        undos ++;
+        
         //to alert listeners of change
         for (ChangeListener l : listeners) {
             l.stateChanged(new ChangeEvent(this));
