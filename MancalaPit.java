@@ -1,6 +1,7 @@
-/**
- * @Author Surafel Abebe
- * 
+package mancala;
+/*
+  @Author Surafel Abebe
+
  */
 
 import java.awt.*;
