@@ -18,6 +18,7 @@ public class MancalaPit extends JPanel implements ChangeListener{
 	MancalaPit(int x) 
 	{
 		currentStoneCount = x;
+		prevStoneCount = x;
 	}
 	
 	public static void main(String[] args) {
@@ -31,11 +32,20 @@ public class MancalaPit extends JPanel implements ChangeListener{
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * Sets the pit's current stone count to 0 after saving it's previous state.
+	 */
+	
 	public void clear() 
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount = 0;
 	}
+	
+	/**
+	 * Sets the pit's current stone count after saving it's previous state.
+	 * @param x - number of stones in the pit after the change
+	 */
 	
 	public void setCurrentStone(int x) 
 	{
@@ -43,17 +53,40 @@ public class MancalaPit extends JPanel implements ChangeListener{
 		currentStoneCount = x;
 	}
 	
+	/**
+	 * Returns the current stone count of the pit.
+	 * @return - the current stone count
+	 */
+	
 	public int getCurrentStone() 
 	{
 		return currentStoneCount;
 	}
 	
+	/**
+	 * Returns the stone count of the pit in it's previous state.
+	 * @return - the previous state's stone count
+	 */
+	
+	public int getPrevStoneCount() 
+	{
+		return prevStoneCount;
+	}
+	
+	/**
+	 * Adds a number of stones to the current stone count after saving the previous state.
+	 * @param x - number of stones to add
+	 */
 	
 	public void add(int x) 
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount += x;
 	}
+	
+	/**
+	 * Sets the current stone count to it's previous state.
+	 */
 	
 	public void revert() 
 	{
