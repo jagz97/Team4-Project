@@ -6,8 +6,10 @@
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class MancalaPit extends JPanel{
+public class MancalaPit extends JPanel implements ChangeListener{
 	
 	private BoardModel model;
 	private int currentStoneCount;
@@ -23,7 +25,7 @@ public class MancalaPit extends JPanel{
 		frame.setTitle("Mancala Pit");
 		frame.setSize(1500, 800);
 		
-		MancalaPit panel = new MancalaPit(6);
+		MancalaPit panel = new MancalaPit(10);
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -35,13 +37,13 @@ public class MancalaPit extends JPanel{
 		currentStoneCount = 0;
 	}
 	
-	public void set(int x) 
+	public void setCurrentStone(int x) 
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount = x;
 	}
 	
-	public int get() 
+	public int getCurrentStone() 
 	{
 		return currentStoneCount;
 	}
@@ -89,15 +91,37 @@ public class MancalaPit extends JPanel{
 					g2.draw(ellipse);
 				
 					double y = Y+5;
+					double x = X+80;
 					for(int j =0; j < currentStoneCount;j++) {
 						
-						Ellipse2D marbles = new Ellipse2D.Double(X+100,y,hSize/10,vSize/10);
+						Ellipse2D marbles = new Ellipse2D.Double(x,y,hSize/10,vSize/10);
 			
 						y+=20;
-						g2.draw(marbles);
+						
+						if(j>=5) {
+							y-=40;
+							x+=15;
+							 marbles = new Ellipse2D.Double(x,y,hSize/10,vSize/10);
+								g2.setColor(Color.BLACK);
+								g2.fill(marbles);
+								g2.draw(marbles);
+							x-=15;
+						}
+						else {
+							g2.setColor(Color.BLACK);
+							g2.fill(marbles);
+							g2.draw(marbles);
+						}
+						
 					}
 					X+=150;
 			}
 }
 }
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
