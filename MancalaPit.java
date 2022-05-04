@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
-public class MancalaPit{
+public class MancalaPit extends JPanel{
 	
 	private BoardModel model;
 	private int currentStoneCount;
@@ -23,7 +23,7 @@ public class MancalaPit{
 		frame.setTitle("Mancala Pit");
 		frame.setSize(1500, 800);
 		
-		DrawPit panel = new DrawPit();
+		MancalaPit panel = new MancalaPit(6);
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -31,6 +31,7 @@ public class MancalaPit{
 	
 	public void clear() 
 	{
+		prevStoneCount = currentStoneCount;
 		currentStoneCount = 0;
 	}
 	
@@ -48,22 +49,9 @@ public class MancalaPit{
 	
 	public void add(int x) 
 	{
+		prevStoneCount = currentStoneCount;
 		currentStoneCount += x;
 	}
-	
-	public void revert() 
-	{
-		currentStoneCount = prevStoneCount;
-	}
-}
-
-
-class DrawPit extends JPanel {
-	
-	private BoardModel model;
-	private int currentStoneCount;
-	private int prevStoneCount;
-	
 	
 	public void revert() 
 	{
@@ -110,7 +98,6 @@ class DrawPit extends JPanel {
 					}
 					X+=150;
 			}
-		}
-		
-	}
+}
+}
 }
