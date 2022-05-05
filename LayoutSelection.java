@@ -68,7 +68,7 @@ class LayoutSelection extends JFrame {
 
 
     public JFrame frame2() {
-        //Buttons to be added here according to this frame Selection
+        //This is vertical layout currently not functional
         JFrame frame = new JFrame();
         frame.setLayout(null);
 
