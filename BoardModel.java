@@ -13,25 +13,28 @@ public class BoardModel
     private static final int A_MANCALA = 6;
     private static final int B_MANCALA = 13;
 
-    private int[] currBoard;
-    private int[] prevBoard;
+    private MancalaPit[] currBoard;
     private ArrayList<ChangeListener> listeners;
     private boolean lastMarbleInMancala;
     private int undos;
 
 
-    enum GAMECONDITION
+    public MancalaPit[] getModel()
     {
-        CONTINUE, AFINISHED, BFINISHED ;
+        return currBoard;
     }
 
 
     public BoardModel(int marblePerPit)
     {
-        currBoard = new int[] { marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, 0,
-                marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, marblePerPit, 0 };
-
-        prevBoard = currBoard.clone();
+        currBoard = new MancalaPit[NUMBER_OF_PITS];
+        int i = 0;
+        while (i < NUMBER_OF_PITS)
+        {
+            currBoard[i] = new MancalaPit(marblePerPit);
+        }
+        currBoard[A_MANCALA].clear();
+        currBoard[B_MANCALA].clear();
         lastMarbleInMancala = false;
         listeners = new ArrayList<>();
         undos = 0;
@@ -41,8 +44,7 @@ public class BoardModel
     public BoardModel()
     {
 
-        currBoard = new int[NUMBER_OF_PITS];
-        prevBoard = currBoard.clone(); // or null?
+        currBoard = new MancalaPit[NUMBER_OF_PITS];
         lastMarbleInMancala = false;
         listeners = new ArrayList<>();
         undos = 0;
@@ -56,31 +58,22 @@ public class BoardModel
         for (int i = 0; i < currBoard.length; i++)
         {
             if (i == A_MANCALA || i == B_MANCALA)
-                currBoard[i] = 0;
+                currBoard[i].clear();
             else
-                currBoard[i] = MarblePerPit;
+                currBoard[i].setCurrentStone(MarblePerPit);
 
         }
-
-        prevBoard = currBoard.clone();
     }
 
 
-    public int[] getCurrBoard()
+    public MancalaPit[] getCurrBoard()
     {
         return currBoard.clone();
     }
 
-
-    public int[] getPrevBoard()
-    {
-        return prevBoard.clone();
-    }
-
-
     public int getAmountInPit(int position)
     {
-        return currBoard[position];
+        return currBoard[position].getCurrentStone();
     }
 
 
@@ -97,7 +90,7 @@ public class BoardModel
 
         //Check if all A's pits are empty
         for (int pitA = 0; pitA < A_MANCALA; pitA++){
-            if (currBoard[pitA] != 0){
+            if (currBoard[pitA].getCurrentStone() != 0){
                 A_empty = false;
                 break;
             } else A_empty = true;
@@ -105,7 +98,7 @@ public class BoardModel
 
         //Check if all B's pits are empty
         for (int pitB = 7; pitB < B_MANCALA; pitB++){
-            if (currBoard[pitB] != 0){
+            if (currBoard[pitB].getCurrentStone() != 0){
                 B_empty = false;
                 break;
 
@@ -132,9 +125,9 @@ public class BoardModel
 
 
         //Compare number of stones in two mancalas
-        if (currBoard[A_MANCALA] > currBoard[B_MANCALA])
+        if (currBoard[A_MANCALA].getCurrentStone() > currBoard[B_MANCALA].getCurrentStone())
             return 1;
-        else if (currBoard[A_MANCALA] < currBoard[B_MANCALA])
+        else if (currBoard[A_MANCALA].getCurrentStone() < currBoard[B_MANCALA].getCurrentStone())
             return 2;
         else return 3;
     }
@@ -145,8 +138,8 @@ public class BoardModel
 
         for (int i = pitPos; i < mancalaPos; i++)
         {
-            currBoard[mancalaPos] += currBoard[i];
-            currBoard[i] = 0;
+            currBoard[mancalaPos].add(currBoard[i].getCurrentStone());
+            currBoard[i].clear();
         }
         for (ChangeListener l : listeners)
             l.stateChanged(new ChangeEvent(this));
@@ -165,10 +158,10 @@ public class BoardModel
             position = position +1;
             ownPosition = position - 7;
         }
-        int marbleAmount = currBoard[position];
+        int marbleAmount = currBoard[position].getCurrentStone();
         if(marbleAmount != 0)
         {
-            prevBoard = currBoard.clone();
+            //prevBoard = currBoard.clone();
             lastMarbleInMancala = false;
 
             if(ownPosition + marbleAmount == 6)
@@ -191,32 +184,40 @@ public class BoardModel
             for(int i = 1; i <= marbleAmount; i++) {
 
                 int addPosition = position + i;
-                if (addPosition == 14) {
+                if (addPosition == 14)
                     position = -1*i;//Looping around the board once b6 pit has been reached
-                }
-                currBoard[position + i] = currBoard[position + i] + 1;
+
+                int marbels = currBoard[position + i].getCurrentStone();
+                marbels= marbels +1;
             }
             //set the number of stones in specified pit number to 0
-            currBoard[oppoPosition] = 0;
+            currBoard[oppoPosition].clear();
+
+
 
             //A's last stone dropped lands in an empty pit on A's side
-            if(turnA && endingPit <= 5 && prevBoard[endingPit] == 0 && !opponMancReached) {
-                currBoard[endingPit] = 0;
-                int opponStones = currBoard[endingPit + (2*(6-endingPit))];
-                currBoard[A_MANCALA] = currBoard[A_MANCALA] + opponStones + 1;
-                currBoard[endingPit + (2*(6-endingPit))] = 0;
+            if(turnA && endingPit <= 5 && currBoard[endingPit].getPrevstonecount()==0 && !opponMancReached) {
+                currBoard[endingPit].clear();
+                // int opponStones = currBoard[endingPit + (2*(6-endingPit))].getCurrentStone();
+                int mancala=currBoard[A_MANCALA].getCurrentStone();
+                mancala= currBoard[A_MANCALA].getCurrentStone() + currBoard[endingPit + (2*(6-endingPit))].getCurrentStone() + 1;
+                currBoard[endingPit + (2*(6-endingPit))].clear();
             }
             // B's last stone dropped in an empty pit on B's side, the same
-            if(!turnA && endingPit > 6 && endingPit < 13 && prevBoard[endingPit] == 0 && !opponMancReached) {
-                currBoard[endingPit] = 0;
-                int opponStones = currBoard[endingPit - (2*(endingPit - 6))];
-                currBoard[B_MANCALA] = currBoard[B_MANCALA] + opponStones + 1;
-                currBoard[endingPit - (2*(endingPit - 6))] = 0;
+            if(!turnA && endingPit > 6 && endingPit < 13 && currBoard[endingPit].getPrevstonecount() == 0 && !opponMancReached) {
+                currBoard[endingPit].clear();
+                //int opponStones = currBoard[endingPit - (2*(endingPit - 6))];
+                int mancala= currBoard[B_MANCALA].getCurrentStone();
+                mancala= currBoard[B_MANCALA].getCurrentStone() + currBoard[endingPit - (2*(endingPit - 6))].getCurrentStone() + 1;
+                currBoard[endingPit - (2*(endingPit - 6))].clear();
             }
 
             //When A passes through opponents side and reaches A's side with the last stone
-            if(turnA && opponMancReached) {
-                currBoard[13] = prevBoard[13];
+            if(turnA && opponMancReached)
+            {
+                int mAmount= currBoard[13].getPrevstonecount();
+                int cAmount= currBoard[13].getCurrentStone();
+                mAmount=cAmount;
                 int nextPitToGetStone = ownPosition + marbleAmount + 1;
                 if(nextPitToGetStone > 13) {
                     nextPitToGetStone = nextPitToGetStone - 14;
@@ -225,12 +226,15 @@ public class BoardModel
             }
             //When B passes through opponents side and reaches B's side with the last stone
             if(!turnA && opponMancReached) {
-                currBoard[6] = prevBoard[6];
+                int BSide=currBoard[6].getPrevstonecount();
+                int ASide= currBoard[6].getPrevstonecount();
+                ASide = BSide;
                 int nextPitToGetStone = ownPosition + marbleAmount + 1;
                 if(nextPitToGetStone > 13) {
                     nextPitToGetStone = nextPitToGetStone - 14;
                 }
-                currBoard[nextPitToGetStone + 7] = currBoard[nextPitToGetStone + 7] + 1;
+                int stone = currBoard[nextPitToGetStone + 7].getCurrentStone();
+                stone = stone + 1;
 
             }
 
@@ -244,7 +248,10 @@ public class BoardModel
 
     public void undo() {
 
-        currBoard = prevBoard.clone();
+        for (MancalaPit pit : currBoard)
+            pit.revert();
+        undos ++;
+
         //to alert listeners of change
         for (ChangeListener l : listeners) {
             l.stateChanged(new ChangeEvent(this));
@@ -257,4 +264,8 @@ public class BoardModel
         listeners.add(l);
     }
 
+    public MancalaPit[] getPrevBoard()
+    {
+        return currBoard.clone();
+    }
 }
