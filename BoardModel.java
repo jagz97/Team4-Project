@@ -31,7 +31,8 @@ public class BoardModel
         int i = 0;
         while (i < NUMBER_OF_PITS)
         {
-            currBoard[i] = new MancalaPit(marblePerPit);
+            currBoard[i] = new MancalaPit(marblePerPit, this);
+            i++;
         }
         currBoard[A_MANCALA].clear();
         currBoard[B_MANCALA].clear();
@@ -68,7 +69,7 @@ public class BoardModel
 
     public MancalaPit[] getCurrBoard()
     {
-        return currBoard.clone();
+        return currBoard;
     }
 
     public int getAmountInPit(int position)
@@ -186,9 +187,9 @@ public class BoardModel
                 int addPosition = position + i;
                 if (addPosition == 14)
                     position = -1*i;//Looping around the board once b6 pit has been reached
-
-                int marbels = currBoard[position + i].getCurrentStone();
-                marbels= marbels +1;
+                currBoard[position + i].add(1);
+                //int marbels = currBoard[position + i].getCurrentStone();
+                //marbels= marbels +1;
             }
             //set the number of stones in specified pit number to 0
             currBoard[oppoPosition].clear();
@@ -199,16 +200,18 @@ public class BoardModel
             if(turnA && endingPit <= 5 && currBoard[endingPit].getPrevstonecount()==0 && !opponMancReached) {
                 currBoard[endingPit].clear();
                 // int opponStones = currBoard[endingPit + (2*(6-endingPit))].getCurrentStone();
-                int mancala=currBoard[A_MANCALA].getCurrentStone();
-                mancala= currBoard[A_MANCALA].getCurrentStone() + currBoard[endingPit + (2*(6-endingPit))].getCurrentStone() + 1;
+                currBoard[A_MANCALA].add(currBoard[endingPit + (2*(6-endingPit))].getCurrentStone() + 1);
+                //int mancala=currBoard[A_MANCALA].getCurrentStone();
+               // mancala= currBoard[A_MANCALA].getCurrentStone() + currBoard[endingPit + (2*(6-endingPit))].getCurrentStone() + 1;
                 currBoard[endingPit + (2*(6-endingPit))].clear();
             }
             // B's last stone dropped in an empty pit on B's side, the same
             if(!turnA && endingPit > 6 && endingPit < 13 && currBoard[endingPit].getPrevstonecount() == 0 && !opponMancReached) {
                 currBoard[endingPit].clear();
+                currBoard[B_MANCALA].add(currBoard[endingPit - (2*(endingPit - 6))].getCurrentStone() + 1);
                 //int opponStones = currBoard[endingPit - (2*(endingPit - 6))];
-                int mancala= currBoard[B_MANCALA].getCurrentStone();
-                mancala= currBoard[B_MANCALA].getCurrentStone() + currBoard[endingPit - (2*(endingPit - 6))].getCurrentStone() + 1;
+                //int mancala= currBoard[B_MANCALA].getCurrentStone();
+                //mancala= currBoard[B_MANCALA].getCurrentStone() + currBoard[endingPit - (2*(endingPit - 6))].getCurrentStone() + 1;
                 currBoard[endingPit - (2*(endingPit - 6))].clear();
             }
 

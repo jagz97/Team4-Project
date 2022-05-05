@@ -17,23 +17,25 @@ public class MancalaPit extends JPanel{
 	private MyListener listener;
 	private int pitType;
 	
-	MancalaPit(int x) 
+	MancalaPit(int x, BoardModel model) 
 	{
+		this.model = model;
 		currentStoneCount = x;
 		prevStoneCount = x;
+		setPreferredSize(new Dimension(100,100));
 	}
 	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		frame.setTitle("Mancala Pit");
-		frame.setSize(1500, 800);
-		
-		MancalaPit panel = new MancalaPit(10);
-		panel.setType(1);
-		frame.add(panel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		JFrame frame = new JFrame();
+//		frame.setTitle("Mancala Pit");
+//		frame.setSize(1500, 800);
+//		
+//		MancalaPit panel = new MancalaPit(10);
+//		panel.setType(1);
+//		frame.add(panel);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setVisible(true);
+//	}
 	
 	private void setType(int x) 
 	{
@@ -48,6 +50,7 @@ public class MancalaPit extends JPanel{
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount = 0;
+		repaint();
 	}
 	
 	public void addListener() 
@@ -85,6 +88,7 @@ public class MancalaPit extends JPanel{
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount = x;
+		repaint();
 	}
 	
 	/**
@@ -116,6 +120,7 @@ public class MancalaPit extends JPanel{
 	{
 		prevStoneCount = currentStoneCount;
 		currentStoneCount += x;
+		repaint();
 	}
 	
 	/**
@@ -125,6 +130,7 @@ public class MancalaPit extends JPanel{
 	public void revert() 
 	{
 		currentStoneCount = prevStoneCount;
+		repaint();
 	}
 	
 	public void paintComponent(Graphics g) 
