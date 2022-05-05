@@ -17,12 +17,16 @@ public class MancalaPit extends JPanel{
 	private MyListener listener;
 	private int pitType;
 	
-	MancalaPit(int x, BoardModel model) 
+	private static final int width = 80;
+    private static final int height = 80;
+	
+	MancalaPit(int x, BoardModel model, int type) 
 	{
+		pitType = type;
 		this.model = model;
 		currentStoneCount = x;
 		prevStoneCount = x;
-		setPreferredSize(new Dimension(100,100));
+		setPreferredSize(new Dimension(width,height));
 	}
 	
 //	public static void main(String[] args) {
@@ -37,9 +41,14 @@ public class MancalaPit extends JPanel{
 //		frame.setVisible(true);
 //	}
 	
-	private void setType(int x) 
+	public void setType(int x) 
 	{
 		pitType = x;
+	}
+	
+	public int getType() 
+	{
+		return pitType;
 	}
 	
 	/**
@@ -137,45 +146,37 @@ public class MancalaPit extends JPanel{
 	{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		double X = 0;
-		double Y = 0;
-		double hSize = 100;
-		double vSize = 100;
+		double hSize = width;
+		double vSize = height;
 		double y = 0;
 		if (pitType > 1) 
 		{
-			Ellipse2D ellipse = new Ellipse2D.Double(0,0,hSize,vSize+300);
+			Ellipse2D ellipse = new Ellipse2D.Double(0,5,hSize,vSize * 2 + 5);
 			g2.draw(ellipse);
-			y = Y + 150;
+			y = 10;
 		}
 		else 
 		{
 			Ellipse2D ellipse = new Ellipse2D.Double(0,0,hSize,vSize);
 			g2.draw(ellipse);
-			y = Y + 5;
+			y = 5;
 		}
-		double x = X + 35;
+		g2.setColor(Color.BLACK);
+		double tempHSize = hSize;
+		double tempVSize = vSize;
+		if ((currentStoneCount > 10 && pitType < 2) || (currentStoneCount > 20)) 
+		{
+			tempHSize = hSize/2;
+			tempVSize = vSize /2;
+		} 
+		double x = hSize / 2 - tempHSize / 10 - 2;
 		for(int j =0; j < currentStoneCount;j++) {
-			
-			Ellipse2D marbles = new Ellipse2D.Double(x,y,hSize/10,vSize/10);
-
-			y+=20;
-			
-			if(j>=5) {
-				y-=40;
-				x+=15;
-				 marbles = new Ellipse2D.Double(x,y,hSize/10,vSize/10);
-					g2.setColor(Color.BLACK);
-					g2.fill(marbles);
-					g2.draw(marbles);
-				x-=15;
-			}
-			else {
-				g2.setColor(Color.BLACK);
-				g2.fill(marbles);
-				g2.draw(marbles);
-			}
-			
+			if (j % 2 == 1) x = hSize / 2 + 2;
+			else x = hSize / 2 - tempHSize / 10 - 2;
+			Ellipse2D marbles = new Ellipse2D.Double(x,y,tempHSize/10,tempVSize/10);
+			g2.fill(marbles);
+			g2.draw(marbles);
+			if (j % 2 == 1) y+=tempVSize / 5;	
 		}
 	}
 	
