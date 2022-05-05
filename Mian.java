@@ -16,8 +16,13 @@ class Mian {
 
 
 
+
+
         JButton buttonL1 = new JButton("BoardLayout1");
-        buttonL1.addActionListener(e -> layout.frame1().setResizable(false));
+        buttonL1.addActionListener(e ->{
+            layout.frame1().setResizable(false);
+
+        });
 
         JButton buttonL2 = new JButton("BoardLayout");
         buttonL2.addActionListener(e -> layout.frame2().setResizable(false));

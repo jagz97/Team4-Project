@@ -14,28 +14,54 @@ class LayoutSelection extends JFrame {
 
 
     public JFrame frame1() {
-        // Buttons to be added here according to this frame selection
-        JFrame frame = new JFrame();
 
-        JButton button = new JButton("Buttons Panel to be added");
-        JButton button1 = new JButton("Buttons Panel to be added");
+        JFrame frame = new JFrame();
+        frame.setLayout(null);
+
+
+        layout = new BoardLayout1();//panel of BoardLayout
+
+
+
+        DrawPit pit = new DrawPit();
+        pit.setBackground(Color.yellow);
+        pit.setLocation(275,150);
+        pit.setSize(650,250);
+
+        JPanel newPanel = new JPanel();
+        JLabel label2 = new JLabel("Player x turn");
+        JButton button3 = new JButton("undo");
+        JButton button4 = new JButton("end");
+        newPanel.add(label2);
+        newPanel.add(button3);
+        newPanel.add(button4);
+
+
+
 
         JPanel panel = new JPanel();
+        JLabel label = new JLabel("How many Stones per pit?");
+        JButton button = new JButton("3");
+        JButton button1 = new JButton("4");
+        panel.add(label);
         panel.add(button);
+        button.addActionListener(e -> {
+            frame.remove(panel);
+            frame.add(newPanel,BorderLayout.SOUTH);
 
-        JPanel panel1 = new JPanel();
-        panel1.add(button1);
 
+            frame.validate();
 
+        });
+        panel.add(button1);
 
-        layout = new BoardLayout1();
-        frame.add((Component) layout,BorderLayout.CENTER);
+        frame.add(pit);
+        frame.add((Component) layout); //add BoardLayout Panel to frame
 
-        frame.add(panel, BorderLayout.NORTH);
-        frame.add(panel1,BorderLayout.SOUTH);
-
+        frame.add(panel);
+        frame.setSize(1000,800);
         frame.setVisible(true);
-        frame.setSize(900, 900);
+
 
         return frame;
     }
@@ -44,8 +70,66 @@ class LayoutSelection extends JFrame {
     public JFrame frame2() {
         //Buttons to be added here according to this frame Selection
         JFrame frame = new JFrame();
+        frame.setLayout(null);
 
         layout = new BoardLayout2();
+
+
+
+
+
+        DrawPit pit = new DrawPit();
+        pit.setBackground(Color.yellow);
+        pit.setLocation(150,275);
+        pit.setSize(650,250);
+
+        JPanel newPanel = new JPanel();
+        JLabel label2 = new JLabel("Player x turn");
+        JButton button3 = new JButton("undo");
+        JButton button4 = new JButton("end");
+        newPanel.add(label2);
+        newPanel.add(button3);
+        newPanel.add(button4);
+
+        button3.addActionListener(e -> {
+            //Undo button action listener here
+        });
+
+        button4.addActionListener(e -> {
+            //end gama button action listener here
+
+        });
+
+
+
+
+
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("How many Stones per pit?");
+        JButton button = new JButton("3");
+        JButton button1 = new JButton("4");
+        panel.add(label);
+        panel.add(button);
+        button.addActionListener(e -> {
+            frame.remove(panel);
+            frame.add(newPanel);
+            newPanel.setLocation(250,700);
+            newPanel.setSize(500,100);
+
+            frame.validate();
+
+        });
+        panel.add(button1);
+        button1.addActionListener(e -> {
+            // 4 stones per pit selection
+        });
+
+        panel.setSize(500,100);
+        panel.setLocation(250,700);
+        frame.add(panel);
+
+        frame.add(pit);
         frame.add((Component) layout);
 
         frame.setSize(1000,800);

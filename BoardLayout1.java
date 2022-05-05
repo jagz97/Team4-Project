@@ -12,12 +12,15 @@ import java.awt.geom.AffineTransform;
 public class BoardLayout1 extends JPanel implements BoardLayout{
 
 
+
     private static final int x = 250;
     private static final int y = 100;
     private static final int width = 400;
     private static final int height = 600;
     private static final boolean raised = true;
-
+        BoardLayout1(){
+            this.setSize(1100,1100);
+        }
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
@@ -69,7 +72,6 @@ public class BoardLayout1 extends JPanel implements BoardLayout{
 
 
     }
-
 
 
 

@@ -14,7 +14,9 @@ public class BoardLayout2 extends JPanel implements BoardLayout {
         private static final int width = 650;
         private static final int height = 400;
         private static final boolean raised = true;
-
+    BoardLayout2(){
+        this.setSize(1100,1100);
+    }
     public void paintComponent(Graphics g){
                 super.paintComponent(g);
 
@@ -74,7 +76,7 @@ public class BoardLayout2 extends JPanel implements BoardLayout {
 
 class Main{
     public static void main(String[] args) {
-        BoardLayout layout = new BoardLayout1();
+        //BoardLayout layout = new BoardLayout1();
         BoardLayout layout2 = new BoardLayout2();
 
 
