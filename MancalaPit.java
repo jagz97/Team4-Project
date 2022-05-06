@@ -62,6 +62,11 @@ public class MancalaPit extends JPanel{
 		repaint();
 	}
 	
+	public void clearLeavePrev() 
+	{
+		currentStoneCount = 0;
+	}
+	
 	public void addListener() 
 	{
 		MyListener listeners = new MyListener();
@@ -108,6 +113,11 @@ public class MancalaPit extends JPanel{
 	public int getCurrentStone() 
 	{
 		return currentStoneCount;
+	}
+	
+	public void setPrevStoneCount(int a) 
+	{
+		prevStoneCount = a;
 	}
 	
 	/**

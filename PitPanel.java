@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -35,6 +37,14 @@ public class PitPanel extends JPanel{
 		model.fillInitialBoard(4);
 		PitPanel panel = new PitPanel(model);
 		frame.add(panel);
+		JButton button = new JButton("undo");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) 
+			{
+				model.undo();
+			}
+		});
+		frame.add(button,BorderLayout.PAGE_END);
 		frame.setVisible(true);
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
