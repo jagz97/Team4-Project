@@ -3,7 +3,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-
+/**
+ * Model part of mvc pattern to store data and notify view
+ */
 public class BoardModel
 {
 
@@ -23,12 +25,20 @@ public class BoardModel
     private String message;
 
 
+    /***
+     * get current board
+     * @return current board
+     */
     public MancalaPit[] getModel()
     {
         return currBoard;
     }
 
 
+    /**
+     * constrate method
+     * @param marblePerPit marbles amount of every pit
+     */
     public BoardModel(int marblePerPit)
     {
         currBoard = new MancalaPit[NUMBER_OF_PITS];
@@ -49,7 +59,10 @@ public class BoardModel
         message = "Player A's Turn";
     }
 
-    // Constructs an empty BoardModel.
+
+    /**
+     * Constructs an empty BoardModel.
+     */
     public BoardModel()
     {
 
@@ -77,39 +90,59 @@ public class BoardModel
         message = "Player A's Turn";
     }
 
-    // initialize
+    /**
+     * initial the board
+     * @param MarblePerPit marbles amount of every pit
+     */
     public void fillInitialBoard(int MarblePerPit)
     {
 
         for (int i = 0; i < currBoard.length; i++)
         {
-            if (!(i == A_MANCALA || i == B_MANCALA)) 
+            if (!(i == A_MANCALA || i == B_MANCALA))
             {
-            	currBoard[i].setCurrentStone(MarblePerPit);
-            	currBoard[i].setPrevStoneCount(MarblePerPit);
-            	if  (i < A_MANCALA) currBoard[i].addListener();
+                currBoard[i].setCurrentStone(MarblePerPit);
+                currBoard[i].setPrevStoneCount(MarblePerPit);
+                if  (i < A_MANCALA) currBoard[i].addListener();
             }
         }
     }
 
 
+    /**
+     * get current board
+     * @return current board
+     */
     public MancalaPit[] getCurrBoard()
     {
         return currBoard;
     }
 
+    /**
+     * get mothod to get the marbles amount of every pit
+     * @param position a specific pit position
+     * @return the marbles amount
+     */
     public int getAmountInPit(int position)
     {
         return currBoard[position].getCurrentStone();
     }
 
 
+    /**
+     * check whether it is a last marble
+     * @return
+     */
     public boolean isLastMarbleInMancala()
     {
         return lastMarbleInMancala;
     }
 
 
+    /**
+     * game end method
+     * @return empty
+     */
     public int isGameOver()
     {
 
@@ -139,8 +172,10 @@ public class BoardModel
     }
 
 
-
-
+    /**
+     * display the winner
+     * @param emptyPitFlag empty
+     */
     public void displayWinner(int emptyPitFlag)
     {
 
@@ -155,11 +190,16 @@ public class BoardModel
         if (currBoard[A_MANCALA].getCurrentStone() > currBoard[B_MANCALA].getCurrentStone())
             message = "Player A Wins!";
         else if (currBoard[A_MANCALA].getCurrentStone() < currBoard[B_MANCALA].getCurrentStone())
-        	message = "Player B Wins!";
+            message = "Player B Wins!";
         else message = "It's a tie!";
     }
 
 
+    /**
+     * marble move to mancala
+     * @param pitPos pit position
+     * @param mancalaPos mancala position
+     */
     public void moveMarblesToMancala(int pitPos, int mancalaPos)
     {
 
@@ -170,7 +210,10 @@ public class BoardModel
         }
     }
 
-    //move
+    /**
+     * movement of marbles
+     * @param position pit position
+     */
     public void move(int position)
     {
         int ownPosition = position;
@@ -199,12 +242,12 @@ public class BoardModel
             //remove stones from chosen pit and redistribute them
             int x = 0;
             for(int i = 1; i <= marbleAmount; i++) {
-            	if (ownPosition + i == 13) 
-            	{
-            		currBoard[position + i].setPrevStoneCount(currBoard[position + i].getCurrentStone());
-            		marbleAmount++;
-            		continue;
-            	}
+                if (ownPosition + i == 13)
+                {
+                    currBoard[position + i].setPrevStoneCount(currBoard[position + i].getCurrentStone());
+                    marbleAmount++;
+                    continue;
+                }
                 int addPosition = position + i;
                 if (addPosition == 14)
                     position = -1*i;//Looping around the board once b6 pit has been reached
@@ -212,9 +255,9 @@ public class BoardModel
                 x = i;
             }
             x++;
-            if (x <= 14) 
+            if (x <= 14)
             {
-            	for(int i = x; i <= 14; i++) {
+                for(int i = x; i <= 14; i++) {
                     int addPosition = position + i;
                     if (addPosition == 14)
                         position = -1*i;//Looping around the board once b6 pit has been reached
@@ -266,78 +309,89 @@ public class BoardModel
             movesThisTurn ++;
             if (turnA) undoB = 0;
             if (!turnA) undoA = 0;
-            if (!lastMarbleInMancala) 
+            if (!lastMarbleInMancala)
             {
-            	if (turnA)
-            		switchTurn(1);
-            	else switchTurn(0);
+                if (turnA)
+                    switchTurn(1);
+                else switchTurn(0);
             }
             int gameOver = isGameOver();
             if (gameOver != 0)
-            	displayWinner(gameOver);
+                displayWinner(gameOver);
         }
     }
 
-    
+
     /**
      * adds mouse listeners to given player's pits, and removes from the other
      * @param x - player to switch turn to
      */
-    public void switchTurn(int x) 
+    public void switchTurn(int x)
     {
-    	if (x == 1) 
-    	{
-    		message = "Player B's Turn";
-    		turnA = false;
-    	}
-    	if (x == 0) 
-    	{
-    		message = "Player A's  Turn";
-    		turnA = true;
-    	}
-    	for (MancalaPit pit : currBoard) 
-    	{
-    		if (pit.getType() == x)
-    			pit.addListener();
-    		else pit.removeListener();
-    	}
-    	prevMovesThisTurn = movesThisTurn;
-    	movesThisTurn = 0;
+        if (x == 1)
+        {
+            message = "Player B's Turn";
+            turnA = false;
+        }
+        if (x == 0)
+        {
+            message = "Player A's  Turn";
+            turnA = true;
+        }
+        for (MancalaPit pit : currBoard)
+        {
+            if (pit.getType() == x)
+                pit.addListener();
+            else pit.removeListener();
+        }
+        prevMovesThisTurn = movesThisTurn;
+        movesThisTurn = 0;
     }
 
-    public void undo() 
+    /**
+     * undo method to provide 3 times of undo per turn
+     */
+    public void undo()
     {
-    	if (!(undoA == 3 || undoB == 3)) 
-    	{
-    		for (MancalaPit pit : currBoard)
-        		pit.revert();
+        if (!(undoA == 3 || undoB == 3))
+        {
+            for (MancalaPit pit : currBoard)
+                pit.revert();
             if ((turnA && movesThisTurn != 0))
-            	undoA++;
+                undoA++;
             if ((!turnA && movesThisTurn != 0))
-            	undoB++;
-            if ((turnA && movesThisTurn == 0)) 
+                undoB++;
+            if ((turnA && movesThisTurn == 0))
             {
-            	undoB++;
-            	movesThisTurn = prevMovesThisTurn;
-            	switchTurn(1);
-            	movesThisTurn = prevMovesThisTurn;
+                undoB++;
+                movesThisTurn = prevMovesThisTurn;
+                switchTurn(1);
+                movesThisTurn = prevMovesThisTurn;
             }
-            if ((!turnA && movesThisTurn == 0)) 
+            if ((!turnA && movesThisTurn == 0))
             {
-            	undoA++;
-            	movesThisTurn = prevMovesThisTurn;
-            	switchTurn(0);
-            	movesThisTurn = prevMovesThisTurn;
+                undoA++;
+                movesThisTurn = prevMovesThisTurn;
+                switchTurn(0);
+                movesThisTurn = prevMovesThisTurn;
             }
-    	}
-    	
+        }
+
     }
 
-    public String getMessage() 
+    /**
+     * get messege method
+     * @return messege
+     */
+    public String getMessage()
     {
-    	return message;
+        return message;
     }
-    
+
+    /**
+     * get the previous method
+     * @returnthe previous method
+     */
     public MancalaPit[] getPrevBoard()
     {
         return currBoard.clone();
