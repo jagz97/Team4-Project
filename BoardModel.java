@@ -14,10 +14,10 @@ public class BoardModel
     private static final int B_MANCALA = 13;
 
     private MancalaPit[] currBoard;
-    private ArrayList<ChangeListener> listeners;
     private boolean lastMarbleInMancala;
     private int undos;
     private int movesThisTurn;
+    private boolean turnA;
 
 
     public MancalaPit[] getModel()
@@ -38,9 +38,9 @@ public class BoardModel
         currBoard[A_MANCALA].clear();
         currBoard[B_MANCALA].clear();
         lastMarbleInMancala = false;
-        listeners = new ArrayList<>();
         undos = 0;
         movesThisTurn = 0;
+        turnA = true;
     }
 
     // Constructs an empty BoardModel.
@@ -63,9 +63,9 @@ public class BoardModel
         }
         currBoard[i] = new MancalaPit(0, this, 3);
         lastMarbleInMancala = false;
-        listeners = new ArrayList<>();
         undos = 0;
         movesThisTurn = 0;
+        turnA = true;
     }
 
     // initialize
@@ -77,6 +77,7 @@ public class BoardModel
             if (!(i == A_MANCALA || i == B_MANCALA)) 
             {
             	currBoard[i].setCurrentStone(MarblePerPit);
+            	currBoard[i].setPrevStoneCount(MarblePerPit);
             	if  (i < A_MANCALA) currBoard[i].addListener();
             }
         }
@@ -163,13 +164,9 @@ public class BoardModel
     //move
     public void move(int position)
     {
-
-        boolean turnA = true;
         int ownPosition = position;
-        if(position > 5)
+        if(!turnA)
         {
-            turnA = false;
-            //position = position +1; //Causing the top pits to move from the wrong starting point
             ownPosition = position - 7;
         }
         int marbleAmount = currBoard[position].getCurrentStone();
@@ -191,9 +188,11 @@ public class BoardModel
                 opponMancReached = true;
             }
             //remove stones from chosen pit and redistribute them
+            int x = 0;
             for(int i = 1; i <= marbleAmount; i++) {
             	if (ownPosition + i == 13) 
             	{
+            		currBoard[position + i].setPrevStoneCount(currBoard[position + i].getCurrentStone());
             		marbleAmount++;
             		continue;
             	}
@@ -201,7 +200,29 @@ public class BoardModel
                 if (addPosition == 14)
                     position = -1*i;//Looping around the board once b6 pit has been reached
                 currBoard[position + i].add(1);
+                x = i;
             }
+            if (x < 14) 
+            {
+            	for(int i = x; i <= 14; i++) {
+                    int addPosition = position + i;
+                    if (addPosition == 14)
+                        position = -1*i;//Looping around the board once b6 pit has been reached
+                    currBoard[position + i].setPrevStoneCount(currBoard[position + i].getCurrentStone());
+                    x = i;
+                }
+            }
+//            for(int i = 1; i <= marbleAmount; i++) {
+//            	if (ownPosition + i == 13) 
+//            	{
+//            		marbleAmount++;
+//            		continue;
+//            	}
+//                int addPosition = position + i;
+//                if (addPosition == 14)
+//                    position = -1*i;//Looping around the board once b6 pit has been reached
+//                currBoard[position + i].add(1);
+//            }
             //set the number of stones in specified pit number to 0
             currBoard[oppoPosition].clear();
 
@@ -242,7 +263,6 @@ public class BoardModel
                 stone = stone + 1;
             }
             movesThisTurn ++;
-            if (movesThisTurn == 1) undos = 0;
             if (!lastMarbleInMancala) 
             {
             	if (turnA)
@@ -262,27 +282,27 @@ public class BoardModel
      */
     public void switchTurn(int x) 
     {
+    	if (x == 1) turnA = false;
+    	if (x == 0) turnA = true;
     	for (MancalaPit pit : currBoard) 
     	{
     		if (pit.getType() == x)
     			pit.addListener();
     		else pit.removeListener();
     	}
+    	movesThisTurn = 0;
     }
 
     public void undo() {
-    	if (undos < 3) 
-    	{
-    		for (MancalaPit pit : currBoard)
-                pit.revert();
-            undos ++;
-    	}
-    }
-
-    //Adds a listener to ArrayList of listeners in the model.
-    public void attachBoardLayout(ChangeListener l) {
-
-        listeners.add(l);
+    	for (MancalaPit pit : currBoard)
+    		pit.revert();
+        undos ++;
+        if (movesThisTurn == 0) 
+        {
+        	if (turnA)
+        		switchTurn(1);
+        	else switchTurn(0);
+        }
     }
 
     public MancalaPit[] getPrevBoard()
