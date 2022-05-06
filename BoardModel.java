@@ -20,6 +20,7 @@ public class BoardModel
     private int undoB;
     private int movesThisTurn;
     private boolean turnA;
+    private String message;
 
 
     public MancalaPit[] getModel()
@@ -45,6 +46,7 @@ public class BoardModel
         movesThisTurn = 0;
         prevMovesThisTurn = 0;
         turnA = true;
+        message = "Player A's Turn";
     }
 
     // Constructs an empty BoardModel.
@@ -72,6 +74,7 @@ public class BoardModel
         movesThisTurn = 0;
         prevMovesThisTurn = 0;
         turnA = true;
+        message = "Player A's Turn";
     }
 
     // initialize
@@ -138,7 +141,7 @@ public class BoardModel
 
 
 
-    public int displayWinner(int emptyPitFlag)
+    public void displayWinner(int emptyPitFlag)
     {
 
         if (emptyPitFlag == 1)
@@ -150,10 +153,10 @@ public class BoardModel
 
         //Compare number of stones in two mancalas
         if (currBoard[A_MANCALA].getCurrentStone() > currBoard[B_MANCALA].getCurrentStone())
-            return 1;
+            message = "Player A Wins!";
         else if (currBoard[A_MANCALA].getCurrentStone() < currBoard[B_MANCALA].getCurrentStone())
-            return 2;
-        else return 3;
+        	message = "Player B Wins!";
+        else message = "It's a tie!";
     }
 
 
@@ -282,8 +285,16 @@ public class BoardModel
      */
     public void switchTurn(int x) 
     {
-    	if (x == 1) turnA = false;
-    	if (x == 0) turnA = true;
+    	if (x == 1) 
+    	{
+    		message = "Player B's Turn";
+    		turnA = false;
+    	}
+    	if (x == 0) 
+    	{
+    		message = "Player A's  Turn";
+    		turnA = true;
+    	}
     	for (MancalaPit pit : currBoard) 
     	{
     		if (pit.getType() == x)
@@ -322,6 +333,11 @@ public class BoardModel
     	
     }
 
+    public String getMessage() 
+    {
+    	return message;
+    }
+    
     public MancalaPit[] getPrevBoard()
     {
         return currBoard.clone();
