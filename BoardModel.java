@@ -1,17 +1,20 @@
+package mancala;
+/**
+ * @authors Wilson, Guoman
+ */
+
 import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-/**
- * Model part of mvc pattern to store data and notify view
- */
+
 public class BoardModel
 {
 
     private static final int NUMBER_OF_PITS = 14;
 
-
+    private ArrayList<ChangeListener> listeners = new ArrayList<>();
     private static final int A_MANCALA = 6;
     private static final int B_MANCALA = 13;
 
@@ -25,15 +28,11 @@ public class BoardModel
     private String message;
 
 
-    /***
-     * get current board
-     * @return current board
-     */
+
     public MancalaPit[] getModel()
     {
         return currBoard;
     }
-
 
     /**
      * constrate method
@@ -58,7 +57,6 @@ public class BoardModel
         turnA = true;
         message = "Player A's Turn";
     }
-
 
     /**
      * Constructs an empty BoardModel.
@@ -91,6 +89,23 @@ public class BoardModel
     }
 
     /**
+     * update the listeners
+     */
+    public void updateListeners(){
+        for(ChangeListener l: listeners){
+            l.stateChanged(new ChangeEvent(this));
+        }
+    }
+
+    /**
+     * add the changeListeners
+     * @param l the listener to change
+     */
+    public void addListener(ChangeListener l){
+        listeners.add(l);
+    }
+
+    /**
      * initial the board
      * @param MarblePerPit marbles amount of every pit
      */
@@ -108,8 +123,7 @@ public class BoardModel
         }
     }
 
-
-    /**
+    /***
      * get current board
      * @return current board
      */
@@ -128,7 +142,6 @@ public class BoardModel
         return currBoard[position].getCurrentStone();
     }
 
-
     /**
      * check whether it is a last marble
      * @return
@@ -137,7 +150,6 @@ public class BoardModel
     {
         return lastMarbleInMancala;
     }
-
 
     /**
      * game end method
@@ -192,8 +204,8 @@ public class BoardModel
         else if (currBoard[A_MANCALA].getCurrentStone() < currBoard[B_MANCALA].getCurrentStone())
             message = "Player B Wins!";
         else message = "It's a tie!";
+        updateListeners();
     }
-
 
     /**
      * marble move to mancala
@@ -346,11 +358,9 @@ public class BoardModel
         }
         prevMovesThisTurn = movesThisTurn;
         movesThisTurn = 0;
+        updateListeners();
     }
 
-    /**
-     * undo method to provide 3 times of undo per turn
-     */
     public void undo()
     {
         if (!(undoA == 3 || undoB == 3))
