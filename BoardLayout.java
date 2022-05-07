@@ -1,14 +1,15 @@
 package mancala;
 /*
-  @author Jagjit Singh
- * Stragery to draw a boad Layout
+ * @author Jagjit Singh
  */
 
 import javax.swing.*;
 import java.awt.*;
 
 
-
+/**
+ * Strategy to draw the BoardLayouts
+ */
 public interface BoardLayout {
     void paintComponent(Graphics g);
 
@@ -18,4 +19,6 @@ public interface BoardLayout {
 
 
 }
+
+
 
