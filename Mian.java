@@ -16,14 +16,14 @@ class Mian {
         JPanel btnPanel = new JPanel();
         JFrame frame = new JFrame();
 
-        JButton buttonL1 = new JButton("BoardLayout1");
+        JButton buttonL1 = new JButton("Board 1");
         buttonL1.addActionListener(e ->{
             layout.frame1().setResizable(false);
             frame.dispose();
 
         });
 
-        JButton buttonL2 = new JButton("BoardLayout");
+        JButton buttonL2 = new JButton("Board 2");
         buttonL2.addActionListener(e -> {
             layout.frame2().setResizable(false);
             frame.dispose();
