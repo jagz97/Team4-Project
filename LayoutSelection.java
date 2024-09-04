@@ -39,10 +39,10 @@ class LayoutSelection extends JFrame implements ChangeListener {
         pit.setSize(700, 175);
 
         JPanel newPanel = new JPanel();
-        JLabel label2 = new JLabel("Player x turn");
+        //JLabel label2 = new JLabel("Player x turn");
         JButton button3 = new JButton("undo");
 
-        newPanel.add(label2);
+        //newPanel.add(label2);
         newPanel.add(button3);
 
         button3.addActionListener(e -> {
